@@ -11,13 +11,23 @@ import (
 // CompileCode ...
 func CompileCode(pathToCode string) (pathToExecutable string, err error) {
 	if _, err := exec.Command("goimports", "-w", pathToCode).Output(); err != nil {
+		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to prepare the code")
 	}
 
 	if _, err := exec.Command("go", "build", pathToCode).Output(); err != nil {
+		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to compile the code")
 	}
 
 	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))
 	return pathToExecutable, nil
+}
+
+func wrapExitError(err error) error {
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		err = errors.Wrapf(err, "%q", string(exitErr.Stderr))
+	}
+
+	return err
 }
