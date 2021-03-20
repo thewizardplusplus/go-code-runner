@@ -340,6 +340,7 @@
   input-imports = [
     "github.com/alecthomas/gometalinter",
     "github.com/cweill/gotests/gotests",
+    "github.com/pkg/errors",
     "github.com/vektra/mockery/cmd",
   ]
   solver-name = "gps-cdcl"
