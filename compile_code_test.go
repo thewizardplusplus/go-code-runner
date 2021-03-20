@@ -1,6 +1,7 @@
 package coderunner
 
 import (
+	"debug/elf"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -31,4 +32,7 @@ func TestCompileCode(test *testing.T) {
 		"import \"fmt\"\n\n" +
 		"func main() { fmt.Println(\"Hello, World!\") }\n"
 	assert.Equal(test, wantedCodeContent, string(codeContent))
+
+	_, err = elf.Open(pathToExecutable)
+	assert.NoError(test, err)
 }

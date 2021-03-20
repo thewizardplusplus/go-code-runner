@@ -15,12 +15,15 @@ func CompileCode(pathToCode string) (pathToExecutable string, err error) {
 		return "", errors.Wrap(err, "unable to prepare the code")
 	}
 
-	if _, err := exec.Command("go", "build", pathToCode).Output(); err != nil {
+	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))
+	_, err = exec.
+		Command("go", "build", "-o", pathToExecutable, pathToCode).
+		Output()
+	if err != nil {
 		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to compile the code")
 	}
 
-	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))
 	return pathToExecutable, nil
 }
 
