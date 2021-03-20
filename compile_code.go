@@ -10,15 +10,16 @@ import (
 
 // CompileCode ...
 func CompileCode(pathToCode string) (pathToExecutable string, err error) {
-	if _, err := exec.Command("goimports", "-w", pathToCode).Output(); err != nil {
+	_, err = exec.Command("goimports", "-w", pathToCode).Output() // nolint: gosec
+	if err != nil {
 		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to prepare the code")
 	}
 
 	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))
-	_, err = exec.
-		Command("go", "build", "-o", pathToExecutable, pathToCode).
-		Output()
+	_, err = exec. // nolint: gosec
+			Command("go", "build", "-o", pathToExecutable, pathToCode).
+			Output()
 	if err != nil {
 		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to compile the code")

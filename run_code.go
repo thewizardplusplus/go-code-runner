@@ -9,7 +9,7 @@ import (
 
 // RunCode ...
 func RunCode(pathToExecutable string, input string) (output string, err error) {
-	cmd := exec.Command(pathToExecutable)
+	cmd := exec.Command(pathToExecutable) // nolint: gosec
 	cmd.Stdin = strings.NewReader(input)
 
 	outputBytes, err := cmd.Output()
