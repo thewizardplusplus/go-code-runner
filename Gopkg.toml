@@ -1,6 +1,5 @@
 required = [
   "github.com/alecthomas/gometalinter",
-  "github.com/vektra/mockery/cmd",
   "github.com/cweill/gotests/gotests",
 ]
 
@@ -14,4 +13,4 @@ required = [
 
 [[constraint]]
   name = "github.com/stretchr/testify"
-  version = "1.7.0"
+  version = "1.6.1"
