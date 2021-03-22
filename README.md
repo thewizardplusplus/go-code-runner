@@ -35,6 +35,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
@@ -55,6 +57,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
 	pathToExecutable, err := coderunner.CompileCode(pathToCode)
 	if err != nil {
