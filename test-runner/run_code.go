@@ -13,6 +13,13 @@ type TestCase struct {
 	ExpectedOutput string
 }
 
+// ErrFailedRunning ...
+type ErrFailedRunning struct {
+	TestCase
+
+	Err error
+}
+
 // ErrUnexpectedOutput ...
 type ErrUnexpectedOutput struct {
 	TestCase
