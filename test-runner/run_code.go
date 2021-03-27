@@ -13,15 +13,15 @@ type TestCase struct {
 	ExpectedOutput string
 }
 
-// ErrTestCase ...
-type ErrTestCase struct {
+// ErrUnexpectedOutput ...
+type ErrUnexpectedOutput struct {
 	TestCase
 
 	ActualOutput string
 }
 
 // Error ...
-func (err ErrTestCase) Error() string {
+func (err ErrUnexpectedOutput) Error() string {
 	return fmt.Sprintf(
 		"unexpected output: expected - %q, actual - %q",
 		err.ExpectedOutput,
@@ -41,7 +41,7 @@ func RunCode(pathToExecutable string, testCases []TestCase) error {
 			)
 		}
 		if actualOutput != testCase.ExpectedOutput {
-			return ErrTestCase{TestCase: testCase, ActualOutput: actualOutput}
+			return ErrUnexpectedOutput{TestCase: testCase, ActualOutput: actualOutput}
 		}
 	}
 

@@ -8,8 +8,8 @@ import (
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
 
-func TestErrTestCase_Error(test *testing.T) {
-	err := ErrTestCase{
+func TestErrUnexpectedOutput_Error(test *testing.T) {
+	err := ErrUnexpectedOutput{
 		TestCase:     TestCase{Input: "input", ExpectedOutput: "expected output"},
 		ActualOutput: "actual output",
 	}
@@ -68,7 +68,7 @@ func TestRunCode(test *testing.T) {
 			wantedErr: assert.Error,
 		},
 		{
-			name: "error with a test case",
+			name: "error with an unexpected output",
 			args: args{
 				code: `
 					package main
@@ -90,7 +90,7 @@ func TestRunCode(test *testing.T) {
 				err error,
 				msgAndArgs ...interface{},
 			) bool {
-				wantedErr := ErrTestCase{
+				wantedErr := ErrUnexpectedOutput{
 					TestCase:     TestCase{Input: "23 42", ExpectedOutput: "100\n"},
 					ActualOutput: "65\n",
 				}
