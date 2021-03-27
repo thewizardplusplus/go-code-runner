@@ -22,7 +22,7 @@ func TestErrUnexpectedOutput_Error(test *testing.T) {
 		ActualOutput: "actual output",
 	}
 
-	const wantedErrMessage = "unexpected output: " +
+	const wantedErrMessage = `unexpected output (input - "input"): ` +
 		`expected - "expected output", actual - "actual output"`
 	assert.EqualError(test, err, wantedErrMessage)
 }

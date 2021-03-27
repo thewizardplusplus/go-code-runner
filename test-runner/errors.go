@@ -30,7 +30,8 @@ type ErrUnexpectedOutput struct {
 // Error ...
 func (err ErrUnexpectedOutput) Error() string {
 	return fmt.Sprintf(
-		"unexpected output: expected - %q, actual - %q",
+		"unexpected output (input - %q): expected - %q, actual - %q",
+		err.Input,
 		err.ExpectedOutput,
 		err.ActualOutput,
 	)
