@@ -9,7 +9,7 @@ import (
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
 
-func Example() {
+func ExampleRunCode() {
 	const code = `
 		package main
 
