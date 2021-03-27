@@ -29,6 +29,100 @@ $ dep ensure -vendor-only
 
 ## Example
 
+`coderunner.CheckImports` (success):
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+
+	coderunner "github.com/thewizardplusplus/go-code-runner"
+)
+
+func main() {
+	const code = `
+		package main
+
+		import (
+			"fmt"
+			"log"
+		)
+
+		func main() {
+			var x, y int
+			if _, err := fmt.Scan(&x, &y); err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Println(x + y)
+		}
+	`
+
+	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
+
+	err = coderunner.CheckImports(pathToCode, []string{"fmt", "log"})
+	fmt.Printf("%v\n", err)
+
+	// Output:
+	// <nil>
+}
+```
+
+`coderunner.CheckImports` (error):
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+
+	coderunner "github.com/thewizardplusplus/go-code-runner"
+)
+
+func main() {
+	const code = `
+		package main
+
+		import (
+			"fmt"
+			"log"
+		)
+
+		func main() {
+			var x, y int
+			if _, err := fmt.Scan(&x, &y); err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Println(x + y)
+		}
+	`
+
+	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
+
+	err = coderunner.CheckImports(pathToCode, []string{"fmt"})
+	fmt.Printf("%v\n", err)
+
+	// Output:
+	// disallowed import "log"
+}
+```
+
 `coderunner.RunCode`:
 
 ```go
