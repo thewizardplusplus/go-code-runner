@@ -1,6 +1,7 @@
 package testrunner
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -61,7 +62,7 @@ func TestRunCode(test *testing.T) {
 			wantedErr: assert.NoError,
 		},
 		{
-			name: "error with compilation",
+			name: "error with failed running",
 			args: args{
 				code: `
 					package main
@@ -75,7 +76,25 @@ func TestRunCode(test *testing.T) {
 					{Input: "23 42", ExpectedOutput: "65\n"},
 				},
 			},
-			wantedErr: assert.Error,
+			wantedErr: func(
+				test assert.TestingT,
+				err error,
+				msgAndArgs ...interface{},
+			) bool {
+				if !assert.IsType(test, ErrFailedRunning{}, err) {
+					return false
+				}
+
+				wantedTestCase := TestCase{Input: "5 12", ExpectedOutput: "17\n"}
+				if !assert.Equal(test, wantedTestCase, err.(ErrFailedRunning).TestCase) {
+					return false
+				}
+
+				return assert.True(test, strings.HasPrefix(
+					err.(ErrFailedRunning).ErrMessage,
+					"unable to run the code",
+				))
+			},
 		},
 		{
 			name: "error with an unexpected output",

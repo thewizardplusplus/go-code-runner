@@ -3,7 +3,6 @@ package testrunner
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
 
@@ -50,11 +49,7 @@ func RunCode(pathToExecutable string, testCases []TestCase) error {
 	for _, testCase := range testCases {
 		actualOutput, err := coderunner.RunCode(pathToExecutable, testCase.Input)
 		if err != nil {
-			return errors.Wrapf(
-				err,
-				"unable to run the test case (input - %q)",
-				testCase.Input,
-			)
+			return ErrFailedRunning{TestCase: testCase, ErrMessage: err.Error()}
 		}
 		if actualOutput != testCase.ExpectedOutput {
 			return ErrUnexpectedOutput{TestCase: testCase, ActualOutput: actualOutput}
