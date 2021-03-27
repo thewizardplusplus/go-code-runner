@@ -2,11 +2,22 @@ package testrunner
 
 import (
 	"testing"
+	"testing/iotest"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
+
+func TestErrFailedRunning_Error(test *testing.T) {
+	err := ErrFailedRunning{
+		TestCase: TestCase{Input: "input", ExpectedOutput: "expected output"},
+		Err:      iotest.ErrTimeout,
+	}
+
+	const wantedErrMessage = `failed running (input - "input"): timeout`
+	assert.EqualError(test, err, wantedErrMessage)
+}
 
 func TestErrUnexpectedOutput_Error(test *testing.T) {
 	err := ErrUnexpectedOutput{
