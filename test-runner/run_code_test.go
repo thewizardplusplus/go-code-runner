@@ -2,7 +2,6 @@ package testrunner
 
 import (
 	"testing"
-	"testing/iotest"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -11,11 +10,11 @@ import (
 
 func TestErrFailedRunning_Error(test *testing.T) {
 	err := ErrFailedRunning{
-		TestCase: TestCase{Input: "input", ExpectedOutput: "expected output"},
-		Err:      iotest.ErrTimeout,
+		TestCase:   TestCase{Input: "input", ExpectedOutput: "expected output"},
+		ErrMessage: "error",
 	}
 
-	const wantedErrMessage = `failed running (input - "input"): timeout`
+	const wantedErrMessage = `failed running (input - "input"): error`
 	assert.EqualError(test, err, wantedErrMessage)
 }
 
