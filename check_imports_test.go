@@ -18,7 +18,62 @@ func TestCheckImports(test *testing.T) {
 		args      args
 		wantedErr assert.ErrorAssertionFunc
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success",
+			args: args{
+				code: `
+					package main
+
+					import (
+						"fmt"
+						"log"
+					)
+
+					func main() {
+						var x, y int
+						if _, err := fmt.Scan(&x, &y); err != nil {
+							log.Fatal(err)
+						}
+
+						fmt.Println(x + y)
+					}
+				`,
+				allowedImports: []string{"fmt", "log"},
+			},
+			wantedErr: assert.NoError,
+		},
+		{
+			name: "error with code parsing",
+			args: args{
+				code:           "incorrect",
+				allowedImports: []string{"fmt", "log"},
+			},
+			wantedErr: assert.Error,
+		},
+		{
+			name: "error with a disallowed import",
+			args: args{
+				code: `
+					package main
+
+					import (
+						"fmt"
+						"log"
+					)
+
+					func main() {
+						var x, y int
+						if _, err := fmt.Scan(&x, &y); err != nil {
+							log.Fatal(err)
+						}
+
+						fmt.Println(x + y)
+					}
+				`,
+				allowedImports: []string{"fmt"},
+			},
+			wantedErr: assert.Error,
+		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
 			pathToCode, err := SaveTemporaryCode(data.args.code)
