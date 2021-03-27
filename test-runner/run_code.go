@@ -20,6 +20,11 @@ type ErrFailedRunning struct {
 	Err error
 }
 
+// Error ...
+func (err ErrFailedRunning) Error() string {
+	return fmt.Sprintf("failed running (input - %q): %v", err.Input, err.Err)
+}
+
 // ErrUnexpectedOutput ...
 type ErrUnexpectedOutput struct {
 	TestCase
