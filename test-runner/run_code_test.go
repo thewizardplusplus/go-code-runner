@@ -30,7 +30,73 @@ func TestRunCode(test *testing.T) {
 		args      args
 		wantedErr assert.ErrorAssertionFunc
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success",
+			args: args{
+				code: `
+					package main
+
+					func main() {
+						var x, y int
+						fmt.Scan(&x, &y)
+
+						fmt.Println(x + y)
+					}
+				`,
+				testCases: []TestCase{
+					{Input: "5 12", ExpectedOutput: "17\n"},
+					{Input: "23 42", ExpectedOutput: "65\n"},
+				},
+			},
+			wantedErr: assert.NoError,
+		},
+		{
+			name: "error with compilation",
+			args: args{
+				code: `
+					package main
+
+					func main() {
+						panic("error")
+					}
+				`,
+				testCases: []TestCase{
+					{Input: "5 12", ExpectedOutput: "17\n"},
+					{Input: "23 42", ExpectedOutput: "65\n"},
+				},
+			},
+			wantedErr: assert.Error,
+		},
+		{
+			name: "error with a test case",
+			args: args{
+				code: `
+					package main
+
+					func main() {
+						var x, y int
+						fmt.Scan(&x, &y)
+
+						fmt.Println(x + y)
+					}
+				`,
+				testCases: []TestCase{
+					{Input: "5 12", ExpectedOutput: "17\n"},
+					{Input: "23 42", ExpectedOutput: "100\n"},
+				},
+			},
+			wantedErr: func(
+				test assert.TestingT,
+				err error,
+				msgAndArgs ...interface{},
+			) bool {
+				wantedErr := ErrTestCase{
+					TestCase:     TestCase{Input: "23 42", ExpectedOutput: "100\n"},
+					ActualOutput: "65\n",
+				}
+				return assert.Equal(test, wantedErr, err)
+			},
+		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
 			pathToCode, err := coderunner.SaveTemporaryCode(data.args.code)
