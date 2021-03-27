@@ -16,7 +16,7 @@ func TestCompileCode(test *testing.T) {
 	pathToCode, err := SaveTemporaryCode(code)
 	require.NoError(test, err)
 
-	pathToExecutable, err := CompileCode(pathToCode)
+	pathToExecutable, err := CompileCode(pathToCode, nil)
 	require.NoError(test, err)
 
 	codeContent, err := ioutil.ReadFile(pathToCode)

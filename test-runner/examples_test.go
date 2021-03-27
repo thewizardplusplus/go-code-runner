@@ -28,7 +28,7 @@ func ExampleRunCode_success() {
 	}
 	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
-	pathToExecutable, err := coderunner.CompileCode(pathToCode)
+	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func ExampleRunCode_error() {
 	}
 	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
-	pathToExecutable, err := coderunner.CompileCode(pathToCode)
+	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

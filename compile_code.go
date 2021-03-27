@@ -9,11 +9,20 @@ import (
 )
 
 // CompileCode ...
-func CompileCode(pathToCode string) (pathToExecutable string, err error) {
+func CompileCode(
+	pathToCode string,
+	allowedImports []string,
+) (pathToExecutable string, err error) {
 	_, err = exec.Command("goimports", "-w", pathToCode).Output() // nolint: gosec
 	if err != nil {
 		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to prepare the code")
+	}
+
+	if len(allowedImports) != 0 {
+		if err := CheckImports(pathToCode, allowedImports); err != nil {
+			return "", errors.Wrap(err, "failed import checking")
+		}
 	}
 
 	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))

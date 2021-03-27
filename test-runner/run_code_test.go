@@ -110,7 +110,7 @@ func TestRunCode(test *testing.T) {
 			pathToCode, err := coderunner.SaveTemporaryCode(data.args.code)
 			require.NoError(test, err)
 
-			pathToExecutable, err := coderunner.CompileCode(pathToCode)
+			pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
 			require.NoError(test, err)
 
 			receivedErr := RunCode(pathToExecutable, data.args.testCases)
