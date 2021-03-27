@@ -36,3 +36,24 @@ func TestCompileCode(test *testing.T) {
 	_, err = elf.Open(pathToExecutable)
 	assert.NoError(test, err)
 }
+
+func TestCompileCode_withDisallowedImport(test *testing.T) {
+	const code = `package main; func main() { fmt.Println("Hello, World!") }`
+	pathToCode, err := SaveTemporaryCode(code)
+	require.NoError(test, err)
+
+	pathToExecutable, compileErr := CompileCode(pathToCode, []string{"log"})
+
+	codeContent, err := ioutil.ReadFile(pathToCode)
+	require.NoError(test, err)
+
+	const wantedCodeContent = "package main\n\n" +
+		"import \"fmt\"\n\n" +
+		"func main() { fmt.Println(\"Hello, World!\") }\n"
+	assert.Equal(test, wantedCodeContent, string(codeContent))
+
+	const wantedCompileErrMessage = "failed import checking: " +
+		`disallowed import "fmt"`
+	assert.Empty(test, pathToExecutable)
+	assert.EqualError(test, compileErr, wantedCompileErrMessage)
+}
