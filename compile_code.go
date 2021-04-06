@@ -20,7 +20,7 @@ func CompileCode(
 	}
 
 	if len(allowedImports) != 0 {
-		if err := CheckImports(pathToCode, allowedImports); err != nil {
+		if err = CheckImports(pathToCode, allowedImports); err != nil {
 			return "", errors.Wrap(err, "failed import checking")
 		}
 	}
