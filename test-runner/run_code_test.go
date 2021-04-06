@@ -142,7 +142,7 @@ func TestRunCode_withTimeout(test *testing.T) {
 	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
 	require.NoError(test, err)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 
 	receivedErr := RunCode(ctx, pathToExecutable, []TestCase{
