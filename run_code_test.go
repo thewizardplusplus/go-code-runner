@@ -3,6 +3,7 @@ package coderunner
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,4 +31,31 @@ func TestRunCode(test *testing.T) {
 	require.NoError(test, err)
 
 	assert.Equal(test, "5\n", output)
+}
+
+func TestRunCode_withTimeout(test *testing.T) {
+	const code = `
+		package main
+
+		func main() {
+			// sleep forever
+			for {
+				runtime.Gosched()
+			}
+		}
+	`
+
+	pathToCode, err := SaveTemporaryCode(code)
+	require.NoError(test, err)
+
+	pathToExecutable, err := CompileCode(pathToCode, nil)
+	require.NoError(test, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	output, err := RunCode(ctx, pathToExecutable, "2 3")
+
+	assert.Equal(test, "", output)
+	assert.Error(test, err)
 }
