@@ -1,6 +1,8 @@
 package testrunner
 
 import (
+	"context"
+
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 )
 
@@ -11,9 +13,13 @@ type TestCase struct {
 }
 
 // RunCode ...
-func RunCode(pathToExecutable string, testCases []TestCase) error {
+func RunCode(
+	ctx context.Context,
+	pathToExecutable string,
+	testCases []TestCase,
+) error {
 	for _, testCase := range testCases {
-		actualOutput, err := coderunner.RunCode(pathToExecutable, testCase.Input)
+		actualOutput, err := coderunner.RunCode(ctx, pathToExecutable, testCase.Input)
 		if err != nil {
 			return ErrFailedRunning{TestCase: testCase, ErrMessage: err.Error()}
 		}

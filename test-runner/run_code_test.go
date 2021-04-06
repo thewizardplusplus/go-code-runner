@@ -1,6 +1,7 @@
 package testrunner
 
 import (
+	"context"
 	"strings"
 	"testing"
 
@@ -113,7 +114,8 @@ func TestRunCode(test *testing.T) {
 			pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
 			require.NoError(test, err)
 
-			receivedErr := RunCode(pathToExecutable, data.args.testCases)
+			receivedErr :=
+				RunCode(context.Background(), pathToExecutable, data.args.testCases)
 			require.NoError(test, err)
 
 			data.wantedErr(test, receivedErr)
