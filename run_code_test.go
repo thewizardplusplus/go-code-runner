@@ -1,6 +1,7 @@
 package coderunner
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestRunCode(test *testing.T) {
 	pathToExecutable, err := CompileCode(pathToCode, nil)
 	require.NoError(test, err)
 
-	output, err := RunCode(pathToExecutable, "2 3")
+	output, err := RunCode(context.Background(), pathToExecutable, "2 3")
 	require.NoError(test, err)
 
 	assert.Equal(test, "5\n", output)

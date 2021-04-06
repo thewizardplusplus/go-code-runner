@@ -1,6 +1,7 @@
 package coderunner_test
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -96,7 +97,8 @@ func ExampleRunCode() {
 		log.Fatal(err)
 	}
 
-	output, err := coderunner.RunCode(pathToExecutable, "2 3")
+	output, err :=
+		coderunner.RunCode(context.Background(), pathToExecutable, "2 3")
 	if err != nil {
 		log.Fatal(err)
 	}

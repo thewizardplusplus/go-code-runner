@@ -1,6 +1,7 @@
 package coderunner
 
 import (
+	"context"
 	"os/exec"
 	"strings"
 
@@ -8,8 +9,12 @@ import (
 )
 
 // RunCode ...
-func RunCode(pathToExecutable string, input string) (output string, err error) {
-	cmd := exec.Command(pathToExecutable) // nolint: gosec
+func RunCode(
+	ctx context.Context,
+	pathToExecutable string,
+	input string,
+) (output string, err error) {
+	cmd := exec.CommandContext(ctx, pathToExecutable) // nolint: gosec
 	cmd.Stdin = strings.NewReader(input)
 
 	outputBytes, err := cmd.Output()
