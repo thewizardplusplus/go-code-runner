@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -121,4 +122,33 @@ func TestRunCode(test *testing.T) {
 			data.wantedErr(test, receivedErr)
 		})
 	}
+}
+
+func TestRunCode_withTimeout(test *testing.T) {
+	const code = `
+		package main
+
+		func main() {
+			// sleep forever
+			for {
+				runtime.Gosched()
+			}
+		}
+	`
+
+	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	require.NoError(test, err)
+
+	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
+	require.NoError(test, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	receivedErr := RunCode(ctx, pathToExecutable, []TestCase{
+		{Input: "5 12", ExpectedOutput: "17\n"},
+		{Input: "23 42", ExpectedOutput: "65\n"},
+	})
+
+	assert.Error(test, receivedErr)
 }
