@@ -12,7 +12,7 @@ import (
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
-func TestRunCode(test *testing.T) {
+func TestRunTestCases(test *testing.T) {
 	type args struct {
 		code      string
 		testCases []TestCase
@@ -117,7 +117,7 @@ func TestRunCode(test *testing.T) {
 			require.NoError(test, err)
 
 			receivedErr :=
-				RunCode(context.Background(), pathToExecutable, data.args.testCases)
+				RunTestCases(context.Background(), pathToExecutable, data.args.testCases)
 			require.NoError(test, err)
 
 			data.wantedErr(test, receivedErr)
@@ -125,7 +125,7 @@ func TestRunCode(test *testing.T) {
 	}
 }
 
-func TestRunCode_withTimeout(test *testing.T) {
+func TestRunTestCases_withTimeout(test *testing.T) {
 	const code = `
 		package main
 
@@ -146,7 +146,7 @@ func TestRunCode_withTimeout(test *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 
-	receivedErr := RunCode(ctx, pathToExecutable, []TestCase{
+	receivedErr := RunTestCases(ctx, pathToExecutable, []TestCase{
 		{Input: "5 12", ExpectedOutput: "17\n"},
 		{Input: "23 42", ExpectedOutput: "65\n"},
 	})

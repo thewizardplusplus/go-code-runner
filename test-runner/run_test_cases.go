@@ -12,8 +12,8 @@ type TestCase struct {
 	ExpectedOutput string
 }
 
-// RunCode ...
-func RunCode(
+// RunTestCases ...
+func RunTestCases(
 	ctx context.Context,
 	pathToExecutable string,
 	testCases []TestCase,

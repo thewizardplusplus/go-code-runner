@@ -12,7 +12,7 @@ import (
 	testrunner "github.com/thewizardplusplus/go-code-runner/test-runner"
 )
 
-func ExampleRunCode_success() {
+func ExampleRunTestCases_success() {
 	const code = `
 		package main
 
@@ -36,7 +36,7 @@ func ExampleRunCode_success() {
 	}
 
 	ctx := context.Background()
-	err = testrunner.RunCode(ctx, pathToExecutable, []testrunner.TestCase{
+	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
 		{Input: "5 12", ExpectedOutput: "17\n"},
 		{Input: "23 42", ExpectedOutput: "65\n"},
 	})
@@ -46,7 +46,7 @@ func ExampleRunCode_success() {
 	// <nil>
 }
 
-func ExampleRunCode_error() {
+func ExampleRunTestCases_error() {
 	const code = `
 		package main
 
@@ -70,7 +70,7 @@ func ExampleRunCode_error() {
 	}
 
 	ctx := context.Background()
-	err = testrunner.RunCode(ctx, pathToExecutable, []testrunner.TestCase{
+	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
 		{Input: "5 12", ExpectedOutput: "17\n"},
 		{Input: "23 42", ExpectedOutput: "100\n"},
 	})

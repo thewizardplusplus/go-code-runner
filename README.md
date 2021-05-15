@@ -177,7 +177,7 @@ func main() {
 }
 ```
 
-`testrunner.RunCode` (success):
+`testrunner.RunTestCases` (success):
 
 ```go
 package main
@@ -218,7 +218,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-	err = testrunner.RunCode(ctx, pathToExecutable, []testrunner.TestCase{
+	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
 		{Input: "5 12", ExpectedOutput: "17\n"},
 		{Input: "23 42", ExpectedOutput: "65\n"},
 	})
@@ -229,7 +229,7 @@ func main() {
 }
 ```
 
-`testrunner.RunCode` (error):
+`testrunner.RunTestCases` (error):
 
 ```go
 package main
@@ -270,7 +270,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-	err = testrunner.RunCode(ctx, pathToExecutable, []testrunner.TestCase{
+	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
 		{Input: "5 12", ExpectedOutput: "17\n"},
 		{Input: "23 42", ExpectedOutput: "100\n"},
 	})
