@@ -1,7 +1,9 @@
 package systemutils
 
 import (
+	"io"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -15,7 +17,13 @@ func SaveTemporaryText(text string) (path string, err error) {
 	}
 
 	tempFile := filepath.Join(tempDir, "text.go")
-	if err := ioutil.WriteFile(tempFile, []byte(text), 0600); err != nil {
+	file, err := os.OpenFile(tempFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	if err != nil {
+		return "", errors.Wrap(err, "unable to create a temporary file")
+	}
+	defer file.Close()
+
+	if _, err := io.WriteString(file, text); err != nil {
 		return "", errors.Wrap(err, "unable to write the text")
 	}
 
