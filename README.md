@@ -29,7 +29,7 @@ $ dep ensure -vendor-only
 
 ## Example
 
-`coderunner.CheckImports` (success):
+`coderunner.CheckImports()` (success):
 
 ```go
 package main
@@ -78,7 +78,7 @@ func main() {
 }
 ```
 
-`coderunner.CheckImports` (error):
+`coderunner.CheckImports()` (error):
 
 ```go
 package main
@@ -127,7 +127,7 @@ func main() {
 }
 ```
 
-`systemutils.RunCommand`:
+`coderunner.CompileCode()`:
 
 ```go
 package main
@@ -180,7 +180,7 @@ func main() {
 }
 ```
 
-`testrunner.RunTestCases` (success):
+`testrunner.RunTestCases()` (success):
 
 ```go
 package main
@@ -238,7 +238,7 @@ func main() {
 }
 ```
 
-`testrunner.RunTestCases` (error):
+`testrunner.RunTestCases()` (error):
 
 ```go
 package main

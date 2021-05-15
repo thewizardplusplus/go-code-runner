@@ -76,7 +76,7 @@ func ExampleCheckImports_error() {
 	// disallowed import "fmt"
 }
 
-func ExampleRunCommand() {
+func ExampleCompileCode() {
 	const code = `
 		package main
 
