@@ -22,7 +22,7 @@ func TestRunCode(test *testing.T) {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	require.NoError(test, err)
 
 	pathToExecutable, err := CompileCode(pathToCode, nil)
@@ -46,7 +46,7 @@ func TestRunCode_withTimeout(test *testing.T) {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	require.NoError(test, err)
 
 	pathToExecutable, err := CompileCode(pathToCode, nil)

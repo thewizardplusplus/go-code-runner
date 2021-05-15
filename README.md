@@ -63,7 +63,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -153,7 +153,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -206,7 +206,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -258,7 +258,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}

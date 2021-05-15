@@ -14,7 +14,7 @@ import (
 
 func TestCompileCode(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	require.NoError(test, err)
 
 	pathToExecutable, err := CompileCode(pathToCode, nil)
@@ -26,8 +26,8 @@ func TestCompileCode(test *testing.T) {
 	// we do not use filepath.Split() because it leaves the separator
 	dir, file := filepath.Dir(pathToExecutable), filepath.Base(pathToExecutable)
 	assert.Equal(test, os.TempDir(), filepath.Dir(dir))
-	assert.Regexp(test, `code\d+`, filepath.Base(dir))
-	assert.Equal(test, "code", file)
+	assert.Regexp(test, `text\d+`, filepath.Base(dir))
+	assert.Equal(test, "text", file)
 
 	const wantedCodeContent = "package main\n\n" +
 		"import \"fmt\"\n\n" +
@@ -40,7 +40,7 @@ func TestCompileCode(test *testing.T) {
 
 func TestCompileCode_withDisallowedImport(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	require.NoError(test, err)
 
 	pathToExecutable, compileErr := CompileCode(pathToCode, []string{"log"})

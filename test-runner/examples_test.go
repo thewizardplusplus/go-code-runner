@@ -24,7 +24,7 @@ func ExampleRunCode_success() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,7 +58,7 @@ func ExampleRunCode_error() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSaveTemporaryCode(test *testing.T) {
-	const code = "test"
-	path, err := SaveTemporaryCode(code)
+func TestSaveTemporaryText(test *testing.T) {
+	const text = "test"
+	path, err := SaveTemporaryText(text)
 	require.NoError(test, err)
 
 	content, err := ioutil.ReadFile(path)
@@ -21,7 +21,7 @@ func TestSaveTemporaryCode(test *testing.T) {
 	// we do not use filepath.Split() because it leaves the separator
 	dir, file := filepath.Dir(path), filepath.Base(path)
 	assert.Equal(test, os.TempDir(), filepath.Dir(dir))
-	assert.Regexp(test, `code\d+`, filepath.Base(dir))
-	assert.Equal(test, "code.go", file)
-	assert.Equal(test, code, string(content))
+	assert.Regexp(test, `text\d+`, filepath.Base(dir))
+	assert.Equal(test, "text.go", file)
+	assert.Equal(test, text, string(content))
 }
