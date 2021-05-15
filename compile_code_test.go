@@ -2,10 +2,7 @@ package coderunner
 
 import (
 	"context"
-	"debug/elf"
 	"io/ioutil"
-	"os"
-	"path/filepath"
 	"testing"
 
 	mapset "github.com/deckarep/golang-set"
@@ -15,49 +12,48 @@ import (
 )
 
 func TestCompileCode(test *testing.T) {
-	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
-	require.NoError(test, err)
+	type args struct {
+		ctx            context.Context
+		code           string
+		allowedImports mapset.Set
+		input          string
+	}
 
-	pathToExecutable, err := CompileCode(context.Background(), pathToCode, nil)
-	require.NoError(test, err)
+	for _, data := range []struct {
+		name             string
+		args             args
+		wantedErr        assert.ErrorAssertionFunc
+		wantPreparedCode string
+		wantOutput       string
+	}{
+		// TODO: Add test cases.
+	} {
+		test.Run(data.name, func(test *testing.T) {
+			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
+			require.NoError(test, err)
 
-	codeContent, err := ioutil.ReadFile(pathToCode)
-	require.NoError(test, err)
+			pathToExecutable, receivedErr :=
+				CompileCode(data.args.ctx, pathToCode, data.args.allowedImports)
 
-	// we do not use filepath.Split() because it leaves the separator
-	dir, file := filepath.Dir(pathToExecutable), filepath.Base(pathToExecutable)
-	assert.Equal(test, os.TempDir(), filepath.Dir(dir))
-	assert.Regexp(test, `text\d+`, filepath.Base(dir))
-	assert.Equal(test, "text", file)
+			data.wantedErr(test, receivedErr)
 
-	const wantedCodeContent = "package main\n\n" +
-		"import \"fmt\"\n\n" +
-		"func main() { fmt.Println(\"Hello, World!\") }\n"
-	assert.Equal(test, wantedCodeContent, string(codeContent))
+			if data.wantPreparedCode != "" {
+				preparedCode, err := ioutil.ReadFile(pathToCode)
+				require.NoError(test, err)
 
-	_, err = elf.Open(pathToExecutable)
-	assert.NoError(test, err)
-}
+				assert.Equal(test, data.wantPreparedCode, string(preparedCode))
+			}
 
-func TestCompileCode_withDisallowedImport(test *testing.T) {
-	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
-	require.NoError(test, err)
+			if data.wantOutput != "" {
+				output, err := systemutils.RunCommand(
+					context.Background(),
+					data.args.input,
+					pathToExecutable,
+				)
+				require.NoError(test, err)
 
-	pathToExecutable, compileErr :=
-		CompileCode(context.Background(), pathToCode, mapset.NewSet("log"))
-
-	codeContent, err := ioutil.ReadFile(pathToCode)
-	require.NoError(test, err)
-
-	const wantedCodeContent = "package main\n\n" +
-		"import \"fmt\"\n\n" +
-		"func main() { fmt.Println(\"Hello, World!\") }\n"
-	assert.Equal(test, wantedCodeContent, string(codeContent))
-
-	const wantedCompileErrMessage = "failed import checking: " +
-		`disallowed import "fmt"`
-	assert.Empty(test, pathToExecutable)
-	assert.EqualError(test, compileErr, wantedCompileErrMessage)
+				assert.Equal(test, data.wantOutput, output)
+			}
+		})
+	}
 }
