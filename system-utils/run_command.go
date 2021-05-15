@@ -15,7 +15,8 @@ func RunCommand(
 	command string,
 	arguments ...string,
 ) (output string, err error) {
-	commandInstance := exec.CommandContext(ctx, command, arguments...)
+	commandInstance :=
+		exec.CommandContext(ctx, command, arguments...) // nolint: gosec
 	commandInstance.Stdin = strings.NewReader(input)
 
 	outputBytes, err := commandInstance.Output()

@@ -17,11 +17,12 @@ func SaveTemporaryText(text string, extension string) (path string, err error) {
 	}
 
 	tempFile := filepath.Join(tempDir, "text"+extension)
-	file, err := os.OpenFile(tempFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	flags := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
+	file, err := os.OpenFile(tempFile, flags, 0600) // nolint: gosec
 	if err != nil {
 		return "", errors.Wrap(err, "unable to create a temporary file")
 	}
-	defer file.Close()
+	defer file.Close() // nolint: errcheck, gosec
 
 	if _, err := io.WriteString(file, text); err != nil {
 		return "", errors.Wrap(err, "unable to write the text")
