@@ -2,8 +2,6 @@ package testrunner
 
 import (
 	"context"
-
-	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 // TestCase ...
@@ -21,12 +19,11 @@ type TestCaseRunner func(ctx context.Context, input string) (
 // RunTestCases ...
 func RunTestCases(
 	ctx context.Context,
-	pathToExecutable string,
 	testCases []TestCase,
+	testCaseRunner TestCaseRunner,
 ) error {
 	for _, testCase := range testCases {
-		actualOutput, err :=
-			systemutils.RunCommand(ctx, testCase.Input, pathToExecutable)
+		actualOutput, err := testCaseRunner(ctx, testCase.Input)
 		if err != nil {
 			return ErrFailedRunning{TestCase: testCase, ErrMessage: err.Error()}
 		}
