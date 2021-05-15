@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func TestCheckImports(test *testing.T) {
@@ -76,7 +77,7 @@ func TestCheckImports(test *testing.T) {
 		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
-			pathToCode, err := SaveTemporaryCode(data.args.code)
+			pathToCode, err := systemutils.SaveTemporaryCode(data.args.code)
 			require.NoError(test, err)
 
 			receivedErr := CheckImports(pathToCode, data.args.allowedImports)

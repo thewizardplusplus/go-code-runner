@@ -9,11 +9,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func TestCompileCode(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	require.NoError(test, err)
 
 	pathToExecutable, err := CompileCode(pathToCode, nil)
@@ -39,7 +40,7 @@ func TestCompileCode(test *testing.T) {
 
 func TestCompileCode_withDisallowedImport(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	require.NoError(test, err)
 
 	pathToExecutable, compileErr := CompileCode(pathToCode, []string{"log"})

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func ExampleCheckImports_success() {
@@ -29,7 +30,7 @@ func ExampleCheckImports_success() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +62,7 @@ func ExampleCheckImports_error() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,7 +87,7 @@ func ExampleRunCode() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}

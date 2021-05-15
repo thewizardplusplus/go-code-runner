@@ -41,6 +41,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func main() {
@@ -62,7 +63,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,6 +89,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func main() {
@@ -109,7 +111,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -136,6 +138,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func main() {
@@ -150,7 +153,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -187,6 +190,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 	testrunner "github.com/thewizardplusplus/go-code-runner/test-runner"
 )
 
@@ -202,7 +206,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -238,6 +242,7 @@ import (
 	"path/filepath"
 
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 	testrunner "github.com/thewizardplusplus/go-code-runner/test-runner"
 )
 
@@ -253,7 +258,7 @@ func main() {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	if err != nil {
 		log.Fatal(err)
 	}

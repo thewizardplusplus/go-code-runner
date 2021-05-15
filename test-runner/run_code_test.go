@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 func TestRunCode(test *testing.T) {
@@ -109,7 +110,7 @@ func TestRunCode(test *testing.T) {
 		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
-			pathToCode, err := coderunner.SaveTemporaryCode(data.args.code)
+			pathToCode, err := systemutils.SaveTemporaryCode(data.args.code)
 			require.NoError(test, err)
 
 			pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
@@ -136,7 +137,7 @@ func TestRunCode_withTimeout(test *testing.T) {
 		}
 	`
 
-	pathToCode, err := coderunner.SaveTemporaryCode(code)
+	pathToCode, err := systemutils.SaveTemporaryCode(code)
 	require.NoError(test, err)
 
 	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
