@@ -2,6 +2,7 @@ package coderunner
 
 import (
 	"context"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -16,9 +17,11 @@ func CompileCode(
 	pathToCode string,
 	allowedImports mapset.Set,
 ) (pathToExecutable string, err error) {
-	_, err = systemutils.RunCommand(ctx, "", "goimports", "-w", pathToCode)
-	if err != nil {
-		return "", errors.Wrap(err, "unable to prepare the code")
+	if _, err = exec.LookPath("goimports"); err == nil {
+		_, err = systemutils.RunCommand(ctx, "", "goimports", "-w", pathToCode)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to prepare the code")
+		}
 	}
 
 	if allowedImports != nil {
