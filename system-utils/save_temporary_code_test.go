@@ -11,8 +11,7 @@ import (
 )
 
 func TestSaveTemporaryText(test *testing.T) {
-	const text = "test"
-	path, err := SaveTemporaryText(text)
+	path, err := SaveTemporaryText("test", ".txt")
 	require.NoError(test, err)
 
 	content, err := ioutil.ReadFile(path)
@@ -22,6 +21,6 @@ func TestSaveTemporaryText(test *testing.T) {
 	dir, file := filepath.Dir(path), filepath.Base(path)
 	assert.Equal(test, os.TempDir(), filepath.Dir(dir))
 	assert.Regexp(test, `text\d+`, filepath.Base(dir))
-	assert.Equal(test, "text.go", file)
-	assert.Equal(test, text, string(content))
+	assert.Equal(test, "text.txt", file)
+	assert.Equal(test, "test", string(content))
 }

@@ -14,7 +14,7 @@ import (
 
 func TestCompileCode(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
 	pathToExecutable, err := CompileCode(pathToCode, nil)
@@ -40,7 +40,7 @@ func TestCompileCode(test *testing.T) {
 
 func TestCompileCode_withDisallowedImport(test *testing.T) {
 	const code = `package main; func main() { fmt.Println("Hello, World!") }`
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
 	pathToExecutable, compileErr := CompileCode(pathToCode, []string{"log"})

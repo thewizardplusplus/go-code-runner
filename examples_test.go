@@ -30,7 +30,7 @@ func ExampleCheckImports_success() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,7 +62,7 @@ func ExampleCheckImports_error() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -87,7 +87,7 @@ func ExampleRunCode() {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	if err != nil {
 		log.Fatal(err)
 	}

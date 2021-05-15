@@ -110,7 +110,7 @@ func TestRunCode(test *testing.T) {
 		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
-			pathToCode, err := systemutils.SaveTemporaryText(data.args.code)
+			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
 			require.NoError(test, err)
 
 			pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
@@ -137,7 +137,7 @@ func TestRunCode_withTimeout(test *testing.T) {
 		}
 	`
 
-	pathToCode, err := systemutils.SaveTemporaryText(code)
+	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
 	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
