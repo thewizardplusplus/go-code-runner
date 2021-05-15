@@ -25,7 +25,7 @@ func CheckImports(pathToCode string, allowedImports []string) error {
 	for _, importSpec := range ast.Imports {
 		importPath, err := strconv.Unquote(importSpec.Path.Value)
 		if err != nil {
-			return errors.Wrap(err, "unable to unquote the import")
+			return errors.Wrap(err, "unable to unquote the import path")
 		}
 		if !allowedImportSet.Contains(importPath) {
 			return errors.Errorf("disallowed import %q", importPath)
