@@ -35,11 +35,16 @@ func ExampleRunTestCases_success() {
 		log.Fatal(err)
 	}
 
-	ctx := context.Background()
-	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
-		{Input: "5 12", ExpectedOutput: "17\n"},
-		{Input: "23 42", ExpectedOutput: "65\n"},
-	})
+	err = testrunner.RunTestCases(
+		context.Background(),
+		[]testrunner.TestCase{
+			{Input: "5 12", ExpectedOutput: "17\n"},
+			{Input: "23 42", ExpectedOutput: "65\n"},
+		},
+		func(ctx context.Context, input string) (output string, err error) {
+			return systemutils.RunCommand(ctx, input, pathToExecutable)
+		},
+	)
 	fmt.Printf("%v\n", err)
 
 	// Output:
@@ -69,11 +74,16 @@ func ExampleRunTestCases_error() {
 		log.Fatal(err)
 	}
 
-	ctx := context.Background()
-	err = testrunner.RunTestCases(ctx, pathToExecutable, []testrunner.TestCase{
-		{Input: "5 12", ExpectedOutput: "17\n"},
-		{Input: "23 42", ExpectedOutput: "100\n"},
-	})
+	err = testrunner.RunTestCases(
+		context.Background(),
+		[]testrunner.TestCase{
+			{Input: "5 12", ExpectedOutput: "17\n"},
+			{Input: "23 42", ExpectedOutput: "100\n"},
+		},
+		func(ctx context.Context, input string) (output string, err error) {
+			return systemutils.RunCommand(ctx, input, pathToExecutable)
+		},
+	)
 	fmt.Printf("%v\n", err)
 
 	// Output:
