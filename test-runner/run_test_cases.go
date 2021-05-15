@@ -12,6 +12,12 @@ type TestCase struct {
 	ExpectedOutput string
 }
 
+// TestCaseRunner ...
+type TestCaseRunner func(ctx context.Context, input string) (
+	output string,
+	err error,
+)
+
 // RunTestCases ...
 func RunTestCases(
 	ctx context.Context,
