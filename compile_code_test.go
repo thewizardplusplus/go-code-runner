@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	mapset "github.com/deckarep/golang-set"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
@@ -43,7 +44,7 @@ func TestCompileCode_withDisallowedImport(test *testing.T) {
 	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
-	pathToExecutable, compileErr := CompileCode(pathToCode, []string{"log"})
+	pathToExecutable, compileErr := CompileCode(pathToCode, mapset.NewSet("log"))
 
 	codeContent, err := ioutil.ReadFile(pathToCode)
 	require.NoError(test, err)

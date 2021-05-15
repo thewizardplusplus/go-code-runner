@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	mapset "github.com/deckarep/golang-set"
 	"github.com/pkg/errors"
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
@@ -12,7 +13,7 @@ import (
 // CompileCode ...
 func CompileCode(
 	pathToCode string,
-	allowedImports []string,
+	allowedImports mapset.Set,
 ) (pathToExecutable string, err error) {
 	ctx := context.Background()
 	_, err = systemutils.RunCommand(ctx, "", "goimports", "-w", pathToCode)
@@ -20,7 +21,7 @@ func CompileCode(
 		return "", errors.Wrap(err, "unable to prepare the code")
 	}
 
-	if len(allowedImports) != 0 {
+	if allowedImports != nil {
 		if err = CheckImports(pathToCode, allowedImports); err != nil {
 			return "", errors.Wrap(err, "failed import checking")
 		}

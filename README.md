@@ -40,6 +40,7 @@ import (
 	"os"
 	"path/filepath"
 
+	mapset "github.com/deckarep/golang-set"
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
@@ -69,7 +70,7 @@ func main() {
 	}
 	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
-	err = coderunner.CheckImports(pathToCode, []string{"fmt", "log"})
+	err = coderunner.CheckImports(pathToCode, mapset.NewSet("fmt", "log"))
 	fmt.Printf("%v\n", err)
 
 	// Output:
@@ -88,6 +89,7 @@ import (
 	"os"
 	"path/filepath"
 
+	mapset "github.com/deckarep/golang-set"
 	coderunner "github.com/thewizardplusplus/go-code-runner"
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
@@ -117,11 +119,11 @@ func main() {
 	}
 	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
-	err = coderunner.CheckImports(pathToCode, []string{"fmt"})
+	err = coderunner.CheckImports(pathToCode, mapset.NewSet("log"))
 	fmt.Printf("%v\n", err)
 
 	// Output:
-	// disallowed import "log"
+	// disallowed import "fmt"
 }
 ```
 

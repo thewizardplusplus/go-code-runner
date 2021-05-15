@@ -10,16 +10,11 @@ import (
 )
 
 // CheckImports ...
-func CheckImports(pathToCode string, allowedImports []string) error {
+func CheckImports(pathToCode string, allowedImports mapset.Set) error {
 	fileSet := token.NewFileSet()
 	ast, err := parser.ParseFile(fileSet, pathToCode, nil, parser.ImportsOnly)
 	if err != nil {
 		return errors.Wrap(err, "unable to parse the code")
-	}
-
-	allowedImportSet := mapset.NewSet()
-	for _, allowedImport := range allowedImports {
-		allowedImportSet.Add(allowedImport)
 	}
 
 	for _, importSpec := range ast.Imports {
@@ -27,7 +22,7 @@ func CheckImports(pathToCode string, allowedImports []string) error {
 		if err != nil {
 			return errors.Wrap(err, "unable to unquote the import path")
 		}
-		if !allowedImportSet.Contains(importPath) {
+		if !allowedImports.Contains(importPath) {
 			return errors.Errorf("disallowed import %q", importPath)
 		}
 	}

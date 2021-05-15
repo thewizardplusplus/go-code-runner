@@ -3,6 +3,7 @@ package coderunner
 import (
 	"testing"
 
+	mapset "github.com/deckarep/golang-set"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
@@ -11,7 +12,7 @@ import (
 func TestCheckImports(test *testing.T) {
 	type args struct {
 		code           string
-		allowedImports []string
+		allowedImports mapset.Set
 	}
 
 	for _, data := range []struct {
@@ -39,7 +40,7 @@ func TestCheckImports(test *testing.T) {
 						fmt.Println(x + y)
 					}
 				`,
-				allowedImports: []string{"fmt", "log"},
+				allowedImports: mapset.NewSet("fmt", "log"),
 			},
 			wantedErr: assert.NoError,
 		},
@@ -47,7 +48,7 @@ func TestCheckImports(test *testing.T) {
 			name: "error with code parsing",
 			args: args{
 				code:           "incorrect",
-				allowedImports: []string{"fmt", "log"},
+				allowedImports: mapset.NewSet("fmt", "log"),
 			},
 			wantedErr: assert.Error,
 		},
@@ -71,7 +72,7 @@ func TestCheckImports(test *testing.T) {
 						fmt.Println(x + y)
 					}
 				`,
-				allowedImports: []string{"fmt"},
+				allowedImports: mapset.NewSet("log"),
 			},
 			wantedErr: assert.Error,
 		},
