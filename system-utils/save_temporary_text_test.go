@@ -13,6 +13,7 @@ import (
 func TestSaveTemporaryText(test *testing.T) {
 	path, err := SaveTemporaryText("test", ".txt")
 	require.NoError(test, err)
+	defer os.RemoveAll(filepath.Dir(path)) // nolint: errcheck
 
 	content, err := ioutil.ReadFile(path)
 	require.NoError(test, err)

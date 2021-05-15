@@ -1,6 +1,8 @@
 package coderunner
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	mapset "github.com/deckarep/golang-set"
@@ -80,6 +82,7 @@ func TestCheckImports(test *testing.T) {
 		test.Run(data.name, func(test *testing.T) {
 			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
 			require.NoError(test, err)
+			defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
 			receivedErr := CheckImports(pathToCode, data.args.allowedImports)
 

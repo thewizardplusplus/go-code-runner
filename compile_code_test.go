@@ -3,6 +3,8 @@ package coderunner
 import (
 	"context"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"testing"
 
 	mapset "github.com/deckarep/golang-set"
@@ -142,6 +144,7 @@ func TestCompileCode(test *testing.T) {
 		test.Run(data.name, func(test *testing.T) {
 			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
 			require.NoError(test, err)
+			defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
 			pathToExecutable, receivedErr :=
 				CompileCode(data.args.ctx, pathToCode, data.args.allowedImports)
