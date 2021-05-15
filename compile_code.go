@@ -1,11 +1,13 @@
 package coderunner
 
 import (
+	"context"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 // CompileCode ...
@@ -13,9 +15,9 @@ func CompileCode(
 	pathToCode string,
 	allowedImports []string,
 ) (pathToExecutable string, err error) {
-	_, err = exec.Command("goimports", "-w", pathToCode).Output() // nolint: gosec
+	ctx := context.Background()
+	_, err = systemutils.RunCommand(ctx, "", "goimports", "-w", pathToCode)
 	if err != nil {
-		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to prepare the code")
 	}
 
@@ -26,11 +28,16 @@ func CompileCode(
 	}
 
 	pathToExecutable = strings.TrimSuffix(pathToCode, filepath.Ext(pathToCode))
-	_, err = exec. // nolint: gosec
-			Command("go", "build", "-o", pathToExecutable, pathToCode).
-			Output()
+	_, err = systemutils.RunCommand(
+		ctx,
+		"",
+		"go",
+		"build",
+		"-o",
+		pathToExecutable,
+		pathToCode,
+	)
 	if err != nil {
-		err = wrapExitError(err)
 		return "", errors.Wrap(err, "unable to compile the code")
 	}
 
