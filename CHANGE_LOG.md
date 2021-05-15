@@ -1,5 +1,7 @@
 # Change Log
 
+## [v1.4](https://github.com/thewizardplusplus/go-code-runner/tree/v1.4) (2021-05-15)
+
 ## [v1.3](https://github.com/thewizardplusplus/go-code-runner/tree/v1.3) (2021-04-06)
 
 ## [v1.2](https://github.com/thewizardplusplus/go-code-runner/tree/v1.2) (2021-03-27)
