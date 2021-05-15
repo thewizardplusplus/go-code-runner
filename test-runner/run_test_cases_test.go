@@ -2,154 +2,101 @@ package testrunner
 
 import (
 	"context"
-	"strings"
 	"testing"
-	"time"
+	"testing/iotest"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	coderunner "github.com/thewizardplusplus/go-code-runner"
-	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestRunTestCases(test *testing.T) {
 	type args struct {
-		code      string
-		testCases []TestCase
+		ctx            context.Context
+		testCases      []TestCase
+		testCaseRunner TestCaseRunnerInterface
 	}
 
 	for _, data := range []struct {
 		name      string
 		args      args
-		wantedErr assert.ErrorAssertionFunc
+		wantedErr error
 	}{
 		{
 			name: "success",
 			args: args{
-				code: `
-					package main
-
-					func main() {
-						var x, y int
-						fmt.Scan(&x, &y)
-
-						fmt.Println(x + y)
-					}
-				`,
+				ctx: context.Background(),
 				testCases: []TestCase{
 					{Input: "5 12", ExpectedOutput: "17\n"},
 					{Input: "23 42", ExpectedOutput: "65\n"},
 				},
+				testCaseRunner: func() TestCaseRunnerInterface {
+					testCaseRunner := new(MockTestCaseRunnerInterface)
+					testCaseRunner.
+						On("RunTestCase", context.Background(), "5 12").
+						Return("17\n", nil)
+					testCaseRunner.
+						On("RunTestCase", context.Background(), "23 42").
+						Return("65\n", nil)
+
+					return testCaseRunner
+				}(),
 			},
-			wantedErr: assert.NoError,
+			wantedErr: nil,
 		},
 		{
 			name: "error with failed running",
 			args: args{
-				code: `
-					package main
-
-					func main() {
-						panic("error")
-					}
-				`,
+				ctx: context.Background(),
 				testCases: []TestCase{
 					{Input: "5 12", ExpectedOutput: "17\n"},
 					{Input: "23 42", ExpectedOutput: "65\n"},
 				},
+				testCaseRunner: func() TestCaseRunnerInterface {
+					testCaseRunner := new(MockTestCaseRunnerInterface)
+					testCaseRunner.
+						On("RunTestCase", context.Background(), "5 12").
+						Return("", iotest.ErrTimeout)
+
+					return testCaseRunner
+				}(),
 			},
-			wantedErr: func(
-				test assert.TestingT,
-				err error,
-				msgAndArgs ...interface{},
-			) bool {
-				if !assert.IsType(test, ErrFailedRunning{}, err) {
-					return false
-				}
-
-				wantedTestCase := TestCase{Input: "5 12", ExpectedOutput: "17\n"}
-				if !assert.Equal(test, wantedTestCase, err.(ErrFailedRunning).TestCase) {
-					return false
-				}
-
-				return assert.True(test, strings.HasPrefix(
-					err.(ErrFailedRunning).ErrMessage,
-					"unable to run the command",
-				))
+			wantedErr: ErrFailedRunning{
+				TestCase:   TestCase{Input: "5 12", ExpectedOutput: "17\n"},
+				ErrMessage: iotest.ErrTimeout.Error(),
 			},
 		},
 		{
 			name: "error with an unexpected output",
 			args: args{
-				code: `
-					package main
-
-					func main() {
-						var x, y int
-						fmt.Scan(&x, &y)
-
-						fmt.Println(x + y)
-					}
-				`,
+				ctx: context.Background(),
 				testCases: []TestCase{
 					{Input: "5 12", ExpectedOutput: "17\n"},
-					{Input: "23 42", ExpectedOutput: "100\n"},
+					{Input: "23 42", ExpectedOutput: "65\n"},
 				},
+				testCaseRunner: func() TestCaseRunnerInterface {
+					testCaseRunner := new(MockTestCaseRunnerInterface)
+					testCaseRunner.
+						On("RunTestCase", context.Background(), "5 12").
+						Return("100\n", nil)
+
+					return testCaseRunner
+				}(),
 			},
-			wantedErr: func(
-				test assert.TestingT,
-				err error,
-				msgAndArgs ...interface{},
-			) bool {
-				wantedErr := ErrUnexpectedOutput{
-					TestCase:     TestCase{Input: "23 42", ExpectedOutput: "100\n"},
-					ActualOutput: "65\n",
-				}
-				return assert.Equal(test, wantedErr, err)
+			wantedErr: ErrUnexpectedOutput{
+				TestCase:     TestCase{Input: "5 12", ExpectedOutput: "17\n"},
+				ActualOutput: "100\n",
 			},
 		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
-			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
-			require.NoError(test, err)
+			receivedErr := RunTestCases(
+				data.args.ctx,
+				data.args.testCases,
+				data.args.testCaseRunner.RunTestCase,
+			)
 
-			pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
-			require.NoError(test, err)
-
-			receivedErr :=
-				RunTestCases(context.Background(), pathToExecutable, data.args.testCases)
-			require.NoError(test, err)
-
-			data.wantedErr(test, receivedErr)
+			mock.AssertExpectationsForObjects(test, data.args.testCaseRunner)
+			assert.Equal(test, data.wantedErr, receivedErr)
 		})
 	}
-}
-
-func TestRunTestCases_withTimeout(test *testing.T) {
-	const code = `
-		package main
-
-		func main() {
-			// sleep forever
-			for {
-				runtime.Gosched()
-			}
-		}
-	`
-
-	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
-	require.NoError(test, err)
-
-	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
-	require.NoError(test, err)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-	defer cancel()
-
-	receivedErr := RunTestCases(ctx, pathToExecutable, []TestCase{
-		{Input: "5 12", ExpectedOutput: "17\n"},
-		{Input: "23 42", ExpectedOutput: "65\n"},
-	})
-
-	assert.Error(test, receivedErr)
 }
