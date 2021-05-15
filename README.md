@@ -125,7 +125,7 @@ func main() {
 }
 ```
 
-`coderunner.RunCode`:
+`systemutils.RunCommand`:
 
 ```go
 package main
@@ -165,7 +165,7 @@ func main() {
 	}
 
 	output, err :=
-		coderunner.RunCode(context.Background(), pathToExecutable, "2 3")
+		systemutils.RunCommand(context.Background(), "2 3", pathToExecutable)
 	if err != nil {
 		log.Fatal(err)
 	}

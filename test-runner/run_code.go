@@ -3,7 +3,7 @@ package testrunner
 import (
 	"context"
 
-	coderunner "github.com/thewizardplusplus/go-code-runner"
+	systemutils "github.com/thewizardplusplus/go-code-runner/system-utils"
 )
 
 // TestCase ...
@@ -19,7 +19,8 @@ func RunCode(
 	testCases []TestCase,
 ) error {
 	for _, testCase := range testCases {
-		actualOutput, err := coderunner.RunCode(ctx, pathToExecutable, testCase.Input)
+		actualOutput, err :=
+			systemutils.RunCommand(ctx, testCase.Input, pathToExecutable)
 		if err != nil {
 			return ErrFailedRunning{TestCase: testCase, ErrMessage: err.Error()}
 		}

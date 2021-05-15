@@ -74,7 +74,7 @@ func TestRunCode(test *testing.T) {
 
 				return assert.True(test, strings.HasPrefix(
 					err.(ErrFailedRunning).ErrMessage,
-					"unable to run the code",
+					"unable to run the command",
 				))
 			},
 		},

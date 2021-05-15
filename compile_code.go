@@ -2,7 +2,6 @@ package coderunner
 
 import (
 	"context"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -42,12 +41,4 @@ func CompileCode(
 	}
 
 	return pathToExecutable, nil
-}
-
-func wrapExitError(err error) error {
-	if exitErr, ok := err.(*exec.ExitError); ok {
-		err = errors.Wrapf(err, "%q", string(exitErr.Stderr))
-	}
-
-	return err
 }

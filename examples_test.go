@@ -75,7 +75,7 @@ func ExampleCheckImports_error() {
 	// disallowed import "log"
 }
 
-func ExampleRunCode() {
+func ExampleRunCommand() {
 	const code = `
 		package main
 
@@ -99,7 +99,7 @@ func ExampleRunCode() {
 	}
 
 	output, err :=
-		coderunner.RunCode(context.Background(), pathToExecutable, "2 3")
+		systemutils.RunCommand(context.Background(), "2 3", pathToExecutable)
 	if err != nil {
 		log.Fatal(err)
 	}
