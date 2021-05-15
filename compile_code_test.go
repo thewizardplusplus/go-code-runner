@@ -26,7 +26,118 @@ func TestCompileCode(test *testing.T) {
 		wantPreparedCode string
 		wantOutput       string
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success",
+			args: args{
+				ctx: context.Background(),
+				code: `
+					package main
+
+					func main() {
+						var x, y int
+						if _, err := fmt.Scan(&x, &y); err != nil {
+							log.Fatal(err)
+						}
+
+						fmt.Println(x + y)
+					}
+				`,
+				allowedImports: nil,
+				input:          "5 12",
+			},
+			wantPreparedCode: "package main\n" +
+				"\n" +
+				"import (\n" +
+				"\t\"fmt\"\n" +
+				"\t\"log\"\n" +
+				")\n" +
+				"\n" +
+				"func main() {\n" +
+				"\tvar x, y int\n" +
+				"\tif _, err := fmt.Scan(&x, &y); err != nil {\n" +
+				"\t\tlog.Fatal(err)\n" +
+				"\t}\n" +
+				"\n" +
+				"\tfmt.Println(x + y)\n" +
+				"}\n",
+			wantOutput: "17\n",
+			wantedErr:  assert.NoError,
+		},
+		{
+			name: "error with code preparing",
+			args: args{
+				ctx: context.Background(),
+				code: `
+					package main
+
+					func main() {
+				`,
+				allowedImports: nil,
+				input:          "5 12",
+			},
+			wantPreparedCode: "",
+			wantOutput:       "",
+			wantedErr:        assert.Error,
+		},
+		{
+			name: "error with import checking",
+			args: args{
+				ctx: context.Background(),
+				code: `
+					package main
+
+					func main() {
+						var x, y int
+						if _, err := fmt.Scan(&x, &y); err != nil {
+							log.Fatal(err)
+						}
+
+						fmt.Println(x + y)
+					}
+				`,
+				allowedImports: mapset.NewSet("log"),
+				input:          "5 12",
+			},
+			wantPreparedCode: "package main\n" +
+				"\n" +
+				"import (\n" +
+				"\t\"fmt\"\n" +
+				"\t\"log\"\n" +
+				")\n" +
+				"\n" +
+				"func main() {\n" +
+				"\tvar x, y int\n" +
+				"\tif _, err := fmt.Scan(&x, &y); err != nil {\n" +
+				"\t\tlog.Fatal(err)\n" +
+				"\t}\n" +
+				"\n" +
+				"\tfmt.Println(x + y)\n" +
+				"}\n",
+			wantOutput: "",
+			wantedErr:  assert.Error,
+		},
+		{
+			name: "error with code compiling",
+			args: args{
+				ctx: context.Background(),
+				code: `
+					package main
+
+					func main() {
+						var x, y int
+					}
+				`,
+				allowedImports: nil,
+				input:          "5 12",
+			},
+			wantPreparedCode: "package main\n" +
+				"\n" +
+				"func main() {\n" +
+				"\tvar x, y int\n" +
+				"}\n",
+			wantOutput: "",
+			wantedErr:  assert.Error,
+		},
 	} {
 		test.Run(data.name, func(test *testing.T) {
 			pathToCode, err := systemutils.SaveTemporaryText(data.args.code, ".go")
