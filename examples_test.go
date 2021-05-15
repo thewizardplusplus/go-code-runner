@@ -94,7 +94,8 @@ func ExampleRunCommand() {
 	}
 	defer os.RemoveAll(filepath.Dir(pathToCode)) // nolint: errcheck
 
-	pathToExecutable, err := coderunner.CompileCode(pathToCode, nil)
+	pathToExecutable, err :=
+		coderunner.CompileCode(context.Background(), pathToCode, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

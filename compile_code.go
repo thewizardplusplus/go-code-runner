@@ -12,10 +12,10 @@ import (
 
 // CompileCode ...
 func CompileCode(
+	ctx context.Context,
 	pathToCode string,
 	allowedImports mapset.Set,
 ) (pathToExecutable string, err error) {
-	ctx := context.Background()
 	_, err = systemutils.RunCommand(ctx, "", "goimports", "-w", pathToCode)
 	if err != nil {
 		return "", errors.Wrap(err, "unable to prepare the code")

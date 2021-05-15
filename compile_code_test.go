@@ -1,6 +1,7 @@
 package coderunner
 
 import (
+	"context"
 	"debug/elf"
 	"io/ioutil"
 	"os"
@@ -18,7 +19,7 @@ func TestCompileCode(test *testing.T) {
 	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
-	pathToExecutable, err := CompileCode(pathToCode, nil)
+	pathToExecutable, err := CompileCode(context.Background(), pathToCode, nil)
 	require.NoError(test, err)
 
 	codeContent, err := ioutil.ReadFile(pathToCode)
@@ -44,7 +45,8 @@ func TestCompileCode_withDisallowedImport(test *testing.T) {
 	pathToCode, err := systemutils.SaveTemporaryText(code, ".go")
 	require.NoError(test, err)
 
-	pathToExecutable, compileErr := CompileCode(pathToCode, mapset.NewSet("log"))
+	pathToExecutable, compileErr :=
+		CompileCode(context.Background(), pathToCode, mapset.NewSet("log"))
 
 	codeContent, err := ioutil.ReadFile(pathToCode)
 	require.NoError(test, err)
