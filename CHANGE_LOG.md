@@ -1,5 +1,11 @@
 # Change Log
 
+## [v1.4.2](https://github.com/thewizardplusplus/go-code-runner/tree/v1.4.2) (2021-07-18)
+
+Installing of the goimports tool in the Travis CI configuration.
+
+- installing of the goimports tool in the Travis CI configuration.
+
 ## [v1.4.1](https://github.com/thewizardplusplus/go-code-runner/tree/v1.4.1) (2021-05-17)
 
 Describing of the releases.
